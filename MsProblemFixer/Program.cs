@@ -36,6 +36,10 @@ namespace MsProblemFixer
                 else if (arg1.ToLower().Contains(_commans[1])) //update
                 {
                     var sql = text.ToString();
+                    var tableName = "table";
+                    if (args.Length > 1)
+                        tableName = args[1];
+
                     var header = sql.Substring(0, sql.IndexOf(NEW_LINE));
                     var headerSplit = header.Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
 
@@ -43,7 +47,9 @@ namespace MsProblemFixer
                     var result = new List<string>();
                     foreach (var row in rows)
                     {
-                        
+                        if (string.IsNullOrWhiteSpace(row))
+                            continue;
+
                         var rowSplitted = row.Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
                         //if (rowSplitted.Length > 1)
                         var setPart = new List<string>();
@@ -52,7 +58,7 @@ namespace MsProblemFixer
                             setPart.Add(headerSplit[i] + " = '" + rowSplitted[i] + "'");
                         }
                         //var rowValues = string.Join<string>("'", rowSplitted);
-                        var fullRow = string.Format("UPDATE {0} SET {1} WHERE {2} = '{3}'", "table", string.Join(", ", setPart), headerSplit[0], rowSplitted[0]);
+                        var fullRow = string.Format("UPDATE {0} SET {1} WHERE {2} = '{3}'", tableName, string.Join(", ", setPart), headerSplit[0], rowSplitted[0]);
                         fullRow = fullRow.Replace("'NULL'", "NULL");
                         result.Add(fullRow);
                     }
