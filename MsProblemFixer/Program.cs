@@ -29,6 +29,7 @@ namespace MsProblemFixer
                 {
                     const string quoteSeparator = "',\r\n'";
                     rows = text.Split(new string[1] { NEW_LINE }, StringSplitOptions.None);
+                    rows = rows.Where(x => string.IsNullOrWhiteSpace(x) == false).ToArray(); // remove empty lines
                     var result = string.Format("in{0}({0}'{1}'{0})", NEW_LINE, string.Join<string>(quoteSeparator, rows));
                     Clipboard.SetText(result);
                     return;
