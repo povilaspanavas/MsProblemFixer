@@ -28,8 +28,9 @@ namespace MsProblemFixer
                 if (arg1.ToLower().Contains(_commans[0])) //quote
                 {
                     const string quoteSeparator = "',\r\n'";
-                    rows = text.Split(new string[1] { NEW_LINE }, StringSplitOptions.None);
+                    rows = text.ToSqlString().Split(new string[1] { NEW_LINE }, StringSplitOptions.None);
                     rows = rows.Where(x => string.IsNullOrWhiteSpace(x) == false).ToArray(); // remove empty lines
+
                     var result = string.Format("in{0}({0}'{1}'{0})", NEW_LINE, string.Join<string>(quoteSeparator, rows));
                     Clipboard.SetText(result);
                     return;
@@ -51,7 +52,7 @@ namespace MsProblemFixer
                         if (string.IsNullOrWhiteSpace(row))
                             continue;
 
-                        var rowSplitted = row.Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
+                        var rowSplitted = row.ToSqlString().Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
                         //if (rowSplitted.Length > 1)
                         var setPart = new List<string>();
                         for (int i = 0; i < headerSplit.Length; i++)
@@ -85,7 +86,7 @@ namespace MsProblemFixer
                 var result = new List<string>();
                 foreach (var row in rows)
                 {
-                    var rowSplitted = row.Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
+                    var rowSplitted = row.ToSqlString().Split(new string[1] { COLUMN_SEPARATOR }, StringSplitOptions.None);
                     //if (rowSplitted.Length > 1)
 
                     var rowValues = string.Join<string>(VALUES_SEPARATOR, rowSplitted);
